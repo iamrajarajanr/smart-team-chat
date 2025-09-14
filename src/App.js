@@ -1,23 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import ChatList from './components/ChatList';
+import ChatWindow from './components/ChatWindow';
+import NewChat from './components/NewChat';
 
 function App() {
+  const [currentScreen, setCurrentScreen] = useState("list");
+  const [selectedChat, setSelectedChat] = useState(null);
+
+  const openChat = (chat) => {
+    setSelectedChat(chat);
+    setCurrentScreen("window");
+  };
+
+  const goBack = () => {
+    setCurrentScreen("list");
+  };
+
+  const startNewChat = () => {
+    setCurrentScreen("new");
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{ maxWidth: 400, margin: 'auto', border: '1px solid #ccc' }}>
+      {currentScreen === "list" && (
+        <div>
+          <ChatList openChat={openChat} />
+          <button onClick={startNewChat} style={{ width: '100%', padding: 10 }}>
+            + New Chat
+          </button>
+        </div>
+      )}
+      {currentScreen === "window" && (
+        <ChatWindow chat={selectedChat} goBack={goBack} />
+      )}
+      {currentScreen === "new" && <NewChat goBack={goBack} />}
     </div>
   );
 }
